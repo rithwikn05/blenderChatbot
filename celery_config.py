@@ -4,20 +4,15 @@ def make_celery(app):
     celery = Celery(
         app.import_name,
         backend=app.config['CELERY_RESULT_BACKEND'],
-        broker=app.config['CELERY_BROKER_URL'],
-        broker_transport_options={
-            'visibility_timeout': 3600,  # 1 hour
-            'fanout_patterns': True,
-            'fanout_prefix': True,
-            'redis_max_connections': 20,
-        }
+        broker=app.config['CELERY_BROKER_URL']
     )
     celery.conf.update(app.config)
+    TaskBase = celery.Task
 
-    class ContextTask(celery.Task):
+    class ContextTask(TaskBase):
         def __call__(self, *args, **kwargs):
             with app.app_context():
-                return self.run(*args, **kwargs)
+                return TaskBase.__call__(self, *args, **kwargs)
 
     celery.Task = ContextTask
     return celery
