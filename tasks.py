@@ -1,9 +1,14 @@
-from celery_config import make_celery
-from flask import Flask
-import subprocess
+from celery import Celery
 
-app = Flask(__name__)
-celery = make_celery(app)
+def make_celery():
+    celery = Celery(
+        'tasks',
+        backend='redis://localhost:6379/0',
+        broker='redis://localhost:6379/0'
+    )
+    return celery
+
+celery = make_celery()
 
 @celery.task
 def run_blender_script(script_path, result_path):
