@@ -1,5 +1,4 @@
 import subprocess
-
 from celery import Celery
 
 def make_celery(app):
@@ -19,14 +18,15 @@ def make_celery(app):
     celery.Task = ContextTask
     return celery
 
-celery = make_celery(app)
+# Create the Celery instance
+celery = make_celery(create_app())
 
 @celery.task
 def run_blender_script(script_path, result_path):
     # Use the Blender executable from the extracted Blender archive
     blender_executable = '/path/to/extracted/blender/blender'
-    
+
     # Run Blender script with the provided paths
     result = subprocess.run([blender_executable, '--background', '--python', script_path, '--render-output', result_path], capture_output=True, text=True)
-    
+
     return result.stdout, result.stderr
