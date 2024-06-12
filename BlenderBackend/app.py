@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
-from extensions import create_app, make_celery
-from tasks import run_blender_script
+from BlenderBackend.extensions import create_app, make_celery
+from BlenderBackend.tasks import run_blender_script
 
 app = create_app()
 celery = make_celery(app)

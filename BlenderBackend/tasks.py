@@ -1,6 +1,6 @@
 import subprocess
 from celery import Celery
-from extensions import create_app, make_celery
+from BlenderBackend.extensions import create_app, make_celery
 
 
 # Create the Celery instance
